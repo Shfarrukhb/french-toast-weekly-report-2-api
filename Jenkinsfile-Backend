@@ -6,9 +6,9 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: cli
+          - name: cli-backend
             image: amazon/aws-cli
-          - name: docker
+          - name: docker-backend
             image: docker:19.03.12-dind
             securityContext:
                 privileged: true     
@@ -18,14 +18,14 @@ pipeline {
     stages {
             stage('cli login') {
                 steps {
-                    container('cli') {
+                    container('cli-backend') {
                     sh 'aws ecr get-login-password --region us-west-2 > password.txt'
                     }
                 }
             }
             stage('build docker image') {
                 steps{
-                    container('docker') {
+                    container('docker-backend') {
                         sh 'docker login --username AWS --password-stdin < password.txt 529396670287.dkr.ecr.us-west-2.amazonaws.com'
                         sh 'docker build -t ecr_backend:db . -f src/CM.WeeklyTeamReport.DB/Dockerfile'
                         sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:db'
