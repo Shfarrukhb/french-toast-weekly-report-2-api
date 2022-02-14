@@ -6,16 +6,8 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: node
-            image: node:16.13.1-alpine
-            command:
-            - cat
-            tty: true
           - name: cli
             image: amazon/aws-cli
-            command:
-            - cat
-            tty: true
           - name: docker
             image: docker:19.03.1-dind
             securityContext:
@@ -24,14 +16,6 @@ pipeline {
         }
     }
     stages {
-            stage('node') {
-            steps {
-                    container('node') {
-                        sh 'npm install'
-                        sh 'npm run build'
-                    }
-                }
-            }
             stage('cli login') {
                 steps {
                     container('cli') {
