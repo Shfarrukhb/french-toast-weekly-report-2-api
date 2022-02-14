@@ -6,7 +6,7 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: cli-backend1
+          - name: backend1
             image: amazon/aws-cli
           - name: docker-backend1
             image: docker:19.03.12-dind
