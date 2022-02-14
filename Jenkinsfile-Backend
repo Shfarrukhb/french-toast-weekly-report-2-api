@@ -43,9 +43,10 @@ pipeline {
                 steps{
                     container('docker') {
                         sh 'docker login --username AWS --password-stdin < password.txt 529396670287.dkr.ecr.us-west-2.amazonaws.com'
-                        sh 'docker build -t ecr_backend .'
-                        sh 'docker tag ecr_backend:latest 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:latest'
-                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:latest'
+                        sh 'docker build -t ecr_backend:db . -f src/CM.WeeklyTeamReport.DB/Dockerfile'
+                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:db'
+                        sh 'docker build -t ecr_backend:api . -f src/CM.WeeklyTeamReport.WebAPI/Dockerfile'
+                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:api'
 }
 }
 }
