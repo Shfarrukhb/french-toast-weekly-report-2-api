@@ -43,9 +43,9 @@ pipeline {
                 steps{
                     container('docker') {
                         sh 'docker login --username AWS --password-stdin < password.txt 529396670287.dkr.ecr.us-west-2.amazonaws.com'
-                        sh 'docker build -t ecr_front .'
-                        sh 'docker tag ecr_front:latest 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_front:latest'
-                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_front:latest'
+                        sh 'docker build -t ecr_backend .'
+                        sh 'docker tag ecr_backend:latest 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:latest'
+                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:latest'
 }
 }
 }
