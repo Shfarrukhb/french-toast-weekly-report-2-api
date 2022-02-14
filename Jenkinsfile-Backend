@@ -9,7 +9,7 @@ pipeline {
           - name: cli
             image: amazon/aws-cli
           - name: docker
-            image: docker:19.03.1-dind
+            image: docker:dind
             securityContext:
                 privileged: true     
          '''
