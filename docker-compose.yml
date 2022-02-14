@@ -20,6 +20,7 @@ services:
             TargetDatabaseName: WeeklyReport
             TargetUser: sa
             TargetPassword: Password.
+            ASPNETCORE_ENVIRONMENT: Kubernetes
         depends_on:
             - db
         networks:
@@ -32,7 +33,7 @@ services:
         ports:
             - 8087:80
         environment:
-            ASPNETCORE_ENVIRONMENT: Docker
+            ASPNETCORE_ENVIRONMENT: Kubernetes
         networks:
             - back
 volumes:
