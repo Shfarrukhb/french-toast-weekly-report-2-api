@@ -12,10 +12,7 @@ pipeline {
             image: docker:19.03.1-dind
             securityContext:
                 privileged: true
-            env: 
-              - name: DOCKER_TLS_CERTDIR
-                values: ""
-         '''
+           '''
         }
     }
     stages {
