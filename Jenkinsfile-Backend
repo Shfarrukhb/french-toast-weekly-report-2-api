@@ -6,12 +6,15 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: backend1
+          - name: cli-back
             image: amazon/aws-cli
-          - name: docker-backend1
-            image: docker:19.03.12-dind
+          - name: docker-back
+            image: docker:19.03.1-dind
             securityContext:
-                privileged: true     
+                privileged: true
+            env: 
+              - name: DOCKER_TLS_CERTDIR
+                values: ""
          '''
         }
     }
