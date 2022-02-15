@@ -6,36 +6,39 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: cli-back
+          - name: cli
             image: amazon/aws-cli
-            command:    
-            - cat 
+            command:
+            - cat
             tty: true
-          - name: docker-back
+          - name: docker
             image: docker:19.03.1-dind
             securityContext:
                 privileged: true
-           '''
+          '''
         }
     }
     stages {
-            stage('cli login') {
+            stage('cli login to ecr') {
                 steps {
-                    container('cli-back') {
+                    container('cli') {
                     sh 'aws ecr get-login-password --region us-west-2 > password.txt'
                     }
                 }
             }
-            stage('build docker image') {
+            stage('build & push image') {
                 steps{
-                    container('docker-back') {
+                    container('docker') {
                         sh 'docker login --username AWS --password-stdin < password.txt 529396670287.dkr.ecr.us-west-2.amazonaws.com'
-                        sh 'docker build -t ecr_backend:db . -f src/CM.WeeklyTeamReport.DB/Dockerfile'
-                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:db'
-                        sh 'docker build -t ecr_backend:api . -f src/CM.WeeklyTeamReport.WebAPI/Dockerfile'
-                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:api'
-}
-}
-}
-}
+                        sh 'docker build -t ecr_backend . -f ./src/CM.WeeklyTeamReport.WebAPI/Dockerfile'
+                        sh 'docker tag ecr_backend 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:v1'
+                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:v1'
+                        // sh 'docker build -t ecr_dacpac . -f ./src/CM.WeeklyTeamReport.DB/Dockerfile'
+                        sh 'docker build -t ecr_dacpac ./src/CM.WeeklyTeamReport.DB -f ./src/CM.WeeklyTeamReport.DB/Dockerfile'
+                        sh 'docker tag ecr_dacpac:v1 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_dacpac:v1'
+                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_dacpac:v1'
+                        }
+                    }
+            }
+    }
 }
