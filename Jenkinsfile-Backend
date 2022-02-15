@@ -33,9 +33,8 @@ pipeline {
                         sh 'docker build -t ecr_backend . -f ./src/CM.WeeklyTeamReport.WebAPI/Dockerfile'
                         sh 'docker tag ecr_backend 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:v1'
                         sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_backend:v1'
-                        // sh 'docker build -t ecr_dacpac . -f ./src/CM.WeeklyTeamReport.DB/Dockerfile'
                         sh 'docker build -t ecr_dacpac ./src/CM.WeeklyTeamReport.DB -f ./src/CM.WeeklyTeamReport.DB/Dockerfile'
-                        sh 'docker tag ecr_dacpac:v1 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_dacpac:v1'
+                        sh 'docker tag ecr_dacpac:latest 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_dacpac:v1'
                         sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_dacpac:v1'
                         }
                     }
