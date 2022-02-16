@@ -6,11 +6,6 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: node
-            image: node:16.13.1-alpine
-            command:
-            - cat
-            tty: true
           - name: cli
             image: amazon/aws-cli
             command:
@@ -19,41 +14,30 @@ pipeline {
           - name: docker
             image: docker:19.03.1-dind
             securityContext:
-                privileged: true     
-         '''
+                privileged: true
+          '''
         }
     }
     stages {
-            stage('prep') {
-                steps {
-                git url: 'https://github.com/Shfarrukhb/french-toast-weekly-report-2-api.git', branch: 'develop'
-                }
-            }
-            stage('node') {
-            steps {
-                    container('node') {
-                        sh 'npm install'
-                        sh 'npm run build'
-                    }
-                }
-            }
-            stage('cli login') {
+            stage('cli login to ecr') {
                 steps {
                     container('cli') {
                     sh 'aws ecr get-login-password --region us-west-2 > password.txt'
-                   }
+                    }
                 }
             }
-            stage('build docker image') {
+            stage('build & push image') {
                 steps{
                     container('docker') {
                         sh 'docker login --username AWS --password-stdin < password.txt 529396670287.dkr.ecr.us-west-2.amazonaws.com'
-                        sh 'docker build -t ecr_front .'
-                        sh 'docker tag ecr_front:latest 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_front:v1'
-                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/ecr_front:v1'
-                       }
+                        sh 'docker build -t back_end . -f ./src/CM.WeeklyTeamReport.WebAPI/Dockerfile'
+                        sh 'docker tag back_end:latest 529396670287.dkr.ecr.us-west-2.amazonaws.com/back_end:v1'
+                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/back_end:v1'
+                        sh 'docker build -t dacpac ./src/CM.WeeklyTeamReport.DB -f ./src/CM.WeeklyTeamReport.DB/Dockerfile'
+                        sh 'docker tag dacpac:latest 529396670287.dkr.ecr.us-west-2.amazonaws.com/dacpac:v1'
+                        sh 'docker push 529396670287.dkr.ecr.us-west-2.amazonaws.com/dacpac:v1'
+                        }
                     }
-                }
-            
+            }
     }
 }
