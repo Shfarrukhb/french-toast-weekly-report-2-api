@@ -32,7 +32,7 @@ pipeline {
             stage('node') {
             steps {
                     container('node') {
-                        sh 'npm cache clean'
+                        sh 'npm rm -rdf node_modules'
                         sh 'npm install'
                         sh 'npm run build'
                     }
