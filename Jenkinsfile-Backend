@@ -26,7 +26,7 @@ pipeline {
     stages {
             stage('prep') {
                 steps {
-                git url: 'https://github.com/Shfarukhb/french-toast-weekly-report-2.git', branch: 'develop'
+                git url: 'https://github.com/Shfarrukhb/french-toast-weekly-report-2-api.git', branch: 'develop'
                 }
             }
             stage('node') {
