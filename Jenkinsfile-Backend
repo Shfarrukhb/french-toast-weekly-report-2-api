@@ -32,7 +32,6 @@ pipeline {
             stage('node') {
             steps {
                     container('node') {
-                        sh 'npm rm -rdf node_modules'
                         sh 'npm install'
                         sh 'npm run build'
                     }
